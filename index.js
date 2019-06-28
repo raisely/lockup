@@ -11,7 +11,8 @@ const paths = [
     ':home/Sites/*/.env*',
     ':home/Sites/*/raisely.json',
     ':home/Library/Keychains',
-    ':home/Library/Containers/at.eggerapps.Postico',
+    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Preferences/',
+    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Application Support/Postico/',
 ];
 
 // Caches that will be purged but NOT BACKED UP
