@@ -11,7 +11,8 @@ const paths = [
     ':home/Sites/*/.env*',
     ':home/Sites/*/raisely.json',
     ':home/Library/Keychains',
-    ':home/Library/Containers/at.eggerapps.Postico',
+    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Preferences/',
+    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Application Support/Postico/',
 ];
 
 // Caches that will be purged but NOT BACKED UP
@@ -27,7 +28,11 @@ const resolvedPaths = paths.map(p => {
 
 const allPaths = _.flatten(resolvedPaths);
 
-const child = exec('zip -rmT@ sensitive-files.zip');
+const command = process.env.EXTRACT ? 
+    'unzip sensitive-files -d /' : 
+    'zip -rmT@ sensitive-files.zip';
+
+const child = exec(command);
 
 readline.createInterface({
     input: child.stdout,
