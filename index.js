@@ -9,7 +9,10 @@ const paths = [
     // Google cloud credentials
     ':home/.config',
     ':home/Sites/*/.env*',
+    ':home/Sites/*/.raisely.json',
+    ':home/Sites/*/*/.env*',
     ':home/Sites/*/raisely.json',
+    ':home/Sites/*/.raisely.json',
     ':home/Library/Keychains',
     ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Preferences/',
     ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Application Support/Postico/',
