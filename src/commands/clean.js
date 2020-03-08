@@ -67,17 +67,19 @@ async function doClean(fileList, { ora, inquirer }) {
 	const file = `./sensitive-files.zip`;
 	let spinner = ora(`Compressing files to preserve`).start();
 	const toSave = resolvePaths(fileList.toSave);
-	// const toDelete = resolvePaths(fileList.toDelete);
-	const toDelete = ['./file1.tmp', './file2.tmp'];
+	const toDelete = resolvePaths(fileList.toDelete);
+	// const toDelete = ['./file1.tmp', './file2.tmp'];
 	try {
-		const cmd = `echo zip -rmT@  ${file}`;
+		const cmd = `zip -rmT@  ${file}`;
 		console.log(fileList.toSave);
+		// await exec(cmd, { stdin: toSave });
 		await exec(cmd, { stdin: toSave });
 		spinner.succeed();
 
 		spinner = ora(`Deleting cache files`).start();
 
 		await exec('xargs rm -rf ', { stdin: toDelete.map(f => `"${f}"`) });
+		// await exec('xargs echo rm -rf ', {  });
 		spinner.succeed();
 	} catch (e) {
 		spinner.fail();
