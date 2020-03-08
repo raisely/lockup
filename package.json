@@ -9,8 +9,14 @@
   "author": "Raisely <engineering@raisely.com> (https://github.com/raisely)",
   "license": "ISC",
   "dependencies": {
+    "commander": "^4.1.1",
+    "conf": "^6.2.1",
     "glob": "^7.1.4",
     "glob-promise": "^3.4.0",
-    "lodash": "^4.17.11"
+    "googleapis": "^47.0.0",
+    "inquirer": "^7.0.6",
+    "lodash": "^4.17.11",
+    "ora": "^4.0.3",
+    "shelljs": "^0.8.3"
   }
 }

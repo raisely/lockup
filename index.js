@@ -1,49 +1,37 @@
-const readline = require('readline');
-const glob = require('glob');
-const _ = require('lodash');
-const { exec } = require('child_process');
+const program = require('commander');
+const inquirer = require('inquirer');
+const ora = require('ora');
+const Conf = require('conf');
+const { log, br } = require('./src/util/helpers');
 
-const paths = [
-    ':home/.ssh',
-    ':home/.aws',
-    // Google cloud credentials
-    ':home/.config',
-    ':home/Sites/*/.env*',
-    ':home/Sites/*/.raisely.json',
-    ':home/Sites/*/*/.env*',
-    ':home/Sites/*/raisely.json',
-    ':home/Sites/*/.raisely.json',
-    ':home/Library/Keychains',
-    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Preferences/',
-    ':home/Library/Containers/at.eggerapps.Postico/Data/Library/Application Support/Postico/',
-    ':home/Library/Application Support/Authy Desktop/',
-];
+const commands = require('./src/commands');
 
-// Caches that will be purged but NOT BACKED UP
-const caches = [
-    ':home/Library/Containers/*/Data/Library/Caches/*',
-    ':home/Library/Caches/*',
-];
+try {
+	const config = new Conf();
 
-const resolvedPaths = paths.map(p => {
-    const path = p.replace(/:home/, process.env.HOME);
-    return glob.sync(path, { nonull: false });
-});
+	program
+		.command('clean')
+		.description('Clean your laptop of all sensitive files and save them to a file to uploaded to cloud storage')
+		.action(runCommand('clean', config))
 
-const allPaths = _.flatten(resolvedPaths);
+		.command('restore')
+		.description('Restore sensitive files to your laptop')
+		.action(runCommand('restore', config))
 
-const command = process.env.EXTRACT ? 
-    'unzip -o sensitive-files -d /' : 
-    'zip -rmT@ sensitive-files.zip';
+		.command('*')
+		.description('Create a configuration for cleaning your laptop')
+		.action(runCommand('interview', config));
 
-const child = exec(command);
 
-readline.createInterface({
-    input: child.stdout,
-}).on('line', console.log);
-readline.createInterface({
-    input: child.stderr,
-}).on('line', console.log);
+	program.parse(process.argv);
+} catch(error) {
+	if (error.stderr) log(error.stderr);
+	br();
+	log(`Error: ${error.message}`);
+}
 
-allPaths.forEach(p => child.stdin.write(`${p}\n`));
-child.stdin.end();
+function runCommand(name, config) {
+	return function runCommandWithArgs(...args) {
+		return commands[name]({ ora, inquirer, config }, ...args);
+	}
+}
