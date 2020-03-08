@@ -1,6 +1,7 @@
 const { log, br, mapEachAction, modulesFromConfig } = require('../util/helpers');
 const { stopApps } = require('../util/apps');
-const { exec } = require('../util/system');
+const { exec, resolvePaths } = require('../util/system');
+const flatten = require('lodash/flatten');
 /**
  *
  * @param {*} actions
@@ -8,7 +9,7 @@ const { exec } = require('../util/system');
 async function clean({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
-	const appsToStop = mapEachAction(actions, 'appsToStop').flat().filter(a => a);
+	const appsToStop = flatten(mapEachAction(actions, 'appsToStop')).filter(a => a);
 	let beforeCleanNotes = `
 The following apps will be stopped during cleaning ${appsToStop.join(', ')}`;
 
@@ -22,22 +23,27 @@ ${notes}
 ***************************`, 'green');
 	log(beforeCleanNotes);
 
-	inquirer.prompt({
+	const answer = await inquirer.prompt({
 		type: 'confirm',
-		name: 'toBeDelivered',
-		message: 'Is this for delivery?',
+		name: 'proceed',
+		message: 'Are you ready to proceed?',
 		default: false
 	});
+
+	if (!answer.proceed) {
+		log('Aborted');
+		return;
+	}
 
 	// Ensure we can get credentials and can upload the file before we start cleaning
 	await storage.beforeClean();
 
 	await stopApps(appsToStop, { ora, inquirer });
 
-	mapEachAction(actions, 'beforeClean').flat().filter(a => a);
+	mapEachAction(actions, 'beforeClean').filter(a => a);
 
 	const masterList = { toDelete: [], toSave: [] }
-	mapEachAction(actions, 'selectFiles').filter(a => a).forEach(files => {
+	flatten(mapEachAction(actions, 'selectFiles')).filter(a => a).forEach(files => {
 		['toDelete', 'toSave'].forEach(type => {
 			if (files[type]) masterList[type] = masterList[type].concat(files[type]);
 		})
@@ -46,7 +52,7 @@ ${notes}
 	const file = await doClean(masterList, { ora, inquirer });
 	await storage.upload(file);
 
-	mapEachAction(actions, 'afterClean').flat().filter(a => a);
+	mapEachAction(actions, 'afterClean').filter(a => a);
 	let afterCleanNotes = '';
 	mapEachAction(actions, 'afterCleanNotes', (action, notes) => {
 		afterCleanNotes += `
@@ -58,18 +64,26 @@ ${notes}
 }
 
 async function doClean(fileList, { ora, inquirer }) {
-	let spinner = ora(`Compressing files to preserve`);
+	const file = `./sensitive-files.zip`;
+	let spinner = ora(`Compressing files to preserve`).start();
+	const toSave = resolvePaths(fileList.toSave);
+	// const toDelete = resolvePaths(fileList.toDelete);
+	const toDelete = ['./file1.tmp', './file2.tmp'];
 	try {
-		await exec('zip -rmT@ sensitive-files.zip', { stdin: fileList.toSave });
-		spinner.success();
+		const cmd = `echo zip -rmT@  ${file}`;
+		console.log(fileList.toSave);
+		await exec(cmd, { stdin: toSave });
+		spinner.succeed();
 
-		spinner = ora(`Deleting cache files`);
-		await exec('xargs rm -rf --', { stdin: fileList.toDelete.map(f => `"${f}"`) });
-		spinner.success();
+		spinner = ora(`Deleting cache files`).start();
+
+		await exec('xargs rm -rf ', { stdin: toDelete.map(f => `"${f}"`) });
+		spinner.succeed();
 	} catch (e) {
 		spinner.fail();
 		throw e;
 	}
+	return file;
 }
 
 module.exports = clean;

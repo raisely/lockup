@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const get = require('lodash/get');
 
-const stores = require('../storage')();
+const stores = require('../stores')();
 const actions = require('../actions')();
 
 function log(message, color) {
@@ -48,7 +48,8 @@ function modulesFromConfig(config) {
 
 	const initialisedStores = selectedStorage.map(store => {
 		if (!stores[store]) throw new Error(`Unknown storage: ${store}`);
-		const initialisedStorage = new actions[store]();
+
+		const initialisedStorage = new stores[store]();
 		initialisedStorage.configure(get(storageConfigs, store, {}));
 		return initialisedStorage;
 	});

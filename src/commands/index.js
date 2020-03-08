@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-let stores;
+let actions;
 
 function init() {
-	if (!stores) {
-		stores = {};
+	if (!actions) {
+		actions = {};
 
 		// Load each model file
 		fs.readdirSync(__dirname)
@@ -16,13 +16,13 @@ function init() {
 					file.endsWith('.js')
 			)
 			.forEach(file => {
-				const store = require(path.join(__dirname, file));
+				const action = require(path.join(__dirname, file));
 
-				stores[store.name] = store;
+				actions[action.name] = action;
 			});
 	}
 
-	return stores;
+	return actions;
 }
 
 module.exports = init;

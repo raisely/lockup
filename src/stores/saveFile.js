@@ -1,4 +1,4 @@
-const Storage = require('./storage');
+const Storage = require('../storage');
 
 class SaveFile extends Storage {
 	async upload(filename) {

@@ -1,7 +1,7 @@
-const allStorage = require('../storage')();
+const allStorage = require('../stores')();
 const allActions = require('../actions')();
 
-const { modulesFromConfig } = require('../helpers');
+const { log, modulesFromConfig } = require('../util/helpers');
 
 async function interview({ ora, inquirer, config }) {
 	const answer = await inquirer
@@ -14,6 +14,7 @@ async function interview({ ora, inquirer, config }) {
 					name: action,
 					value: action,
 				})),
+				default: config.get('actions'),
 			}, {
 				type: 'list',
 				name: 'storage',
@@ -32,19 +33,22 @@ async function interview({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
 	// Configure storage
-	Object.keys(storage).forEach(store => {
-		interviewClass(config, store, 'storage', storage[store]);
-	});
+	for (const store in storage) {
+		await interviewClass({ ora, inquirer, config }, store, 'storage', storage[store]);
+	};
 
 	// Configure actions
-	Object.keys(actions).forEach(action => {
-		interviewClass(config, action, 'action', actions[action]);
-	});
+	for (const action in actions) {
+		await interviewClass({ ora, inquirer, config }, action, 'action', actions[action]);
+	};
+
+	log('Your configuration has been saved to');
+	console.log(config.path);
 }
 
-function interviewClass(config, name, configType, instance) {
+async function interviewClass({ ora, inquirer, config }, name, configType, instance) {
 	if (instance.interview) {
-		const instanceConfig = instance.interview();
+		const instanceConfig = await instance.interview({ ora, inquirer });
 		config.set(`${configType}Config.${name}`, instanceConfig);
 	}
 }

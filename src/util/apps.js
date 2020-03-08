@@ -1,16 +1,16 @@
 const { exec } = require('./system');
 
 async function stopApps(appsToStop, { ora, inquirer }) {
-	let spinner = ora(`Stopping applications`);
+	let spinner = ora(`Stopping applications`).start();
 
-	const failedApps = await appsToStop.map(app => {
-		exec(`osascript -e 'quit app "${app}"'`)
+	const appExecutions = await Promise.all(appsToStop.map(app => {
+		return exec(`osascript -e 'quit app "${app}"'`, { dontReject: true })
 			.then(({ code }) => ({
 				app,
 				code,
 			}));
-	})
-	.filter(result => result.code !== 0)
+	}));
+	const failedApps = appExecutions.filter(result => result.code !== 0)
 	.map(result => result.app)
 	.join(',');
 
@@ -19,7 +19,7 @@ async function stopApps(appsToStop, { ora, inquirer }) {
 		throw new Error(`The following apps did not shutdown: ${failedApps}`);
 	}
 
-	spinner.success();
+	spinner.succeed();
 }
 
 module.exports = {

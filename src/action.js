@@ -23,7 +23,7 @@ class Action {
 
 	}
 	interview({ inquirer, ora }) {
-
+		return {};
 	}
 	configure(config) {
 		this.conig = config;

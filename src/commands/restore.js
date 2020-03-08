@@ -1,6 +1,7 @@
 const { log, br, mapEachAction, modulesFromConfig } = require('../util/helpers');
 const { stopApps } = require('../util/apps');
 const { exec } = require('../util/system');
+const flatten = require('lodash/flatten');
 /**
  *
  * @param {*} actions
@@ -8,53 +9,58 @@ const { exec } = require('../util/system');
 async function restore({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
-	const appsToStop = mapEachAction(actions, 'appsToStop').flat().filter(a => a);
-	let beforeCleanNotes = `
+	const appsToStop = flatten(mapEachAction(actions, 'appsToStop')).filter(a => a);
+	let beforeRestoreNotes = `
 The following apps will be stopped before restoring: ${appsToStop.join(', ')}`;
 
 	mapEachAction(actions, 'beforeRestoreNotes', (action, notes) => {
-		beforeCleanNotes += `
+		beforeRestoreNotes += `
 ${notes}
 `;
 	});
 	log(`***************************
 	About to Restore
 ***************************`, 'green');
-	log(beforeCleanNotes);
+	log(beforeRestoreNotes);
 
-	inquirer.prompt({
+	const answer = await inquirer.prompt({
 		type: 'confirm',
-		name: 'toBeDelivered',
-		message: 'Is this for delivery?',
+		name: 'proceed',
+		message: 'Are you ready to proceed?',
 		default: false
 	});
 
-	// Ensure we can get credentials and can upload the file before we start cleaning
+	if (!answer.proceed) {
+		log('Aborted');
+		return;
+	}
+
 	await storage.beforeRestore();
 
 	await stopApps(appsToStop, { ora, inquirer });
 
-	mapEachAction(actions, 'beforeRestore').flat().filter(a => a);
+	mapEachAction(actions, 'beforeRestore');
 
-	await storage.download(file);
-	const file = await doRestore({ ora, inquirer });
+	// const filename = await storage.download();
+	const filename = './sensitive-files.zip';
+	await doRestore(filename, { ora, inquirer });
 
-	mapEachAction(actions, 'afterRestore').flat().filter(a => a);
-	let afterCleanNotes = '';
+	mapEachAction(actions, 'afterRestore');
+	let afterRestoreNotes = '';
 	mapEachAction(actions, 'afterRestoreNotes', (action, notes) => {
-		beforeCleanNotes += `
+		afterRestoreNotes += `
 ${notes}
 `;
 	});
-	log(afterCleanNotes);
-	if (storage.afterCleanNotes) log(storage.afterCleanNotes());
+	log(afterRestoreNotes);
+	if (storage.afterRestoreNotes) log(storage.afterRestoreNotes());
 }
 
-async function doRestore(fileList, { ora, inquirer }) {
-	let spinner = ora(`Restoring files`);
+async function doRestore(filename, { ora, inquirer }) {
+	let spinner = ora(`Restoring files`).start();
 	try {
-		await exec('unzip -o sensitive-files -d /');
-		spinner.success();
+		await exec(`unzip -o ${filename} -d /`);
+		spinner.succeed();
 	} catch (e) {
 		spinner.fail();
 		throw e;

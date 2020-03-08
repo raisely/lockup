@@ -1,10 +1,16 @@
 const glob = require('glob');
 const shelljs = require('shelljs');
 
-async function exec(cmd, { stdin }) {
+async function exec(cmd, options = {}) {
+	const { stdin, dontReject, silent } = options;
 	return new Promise((resolve, reject) => {
 		let child;
-		child = shelljs.exec(cmd, { async: true }, (code, stdout, stderr) => {
+		child = shelljs.exec(cmd, { async: true, silent }, (code, stdout, stderr) => {
+			if (!dontReject && (code !== 0)) {
+				const error = new Error('Command failed');
+				Object.assign(error, { code, stdout, stderr });
+				return reject(error);
+			}
 			resolve({
 				cmd, code, stdout, stderr
 			});

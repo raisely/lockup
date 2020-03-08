@@ -4,7 +4,7 @@ const ora = require('ora');
 const Conf = require('conf');
 const { log, br } = require('./src/util/helpers');
 
-const commands = require('./src/commands');
+const commands = require('./src/commands')();
 
 try {
 	const config = new Conf();
@@ -12,13 +12,15 @@ try {
 	program
 		.command('clean')
 		.description('Clean your laptop of all sensitive files and save them to a file to uploaded to cloud storage')
-		.action(runCommand('clean', config))
+		.action(runCommand('clean', config));
 
+	program
 		.command('restore')
 		.description('Restore sensitive files to your laptop')
-		.action(runCommand('restore', config))
+		.action(runCommand('restore', config));
 
-		.command('*')
+	program
+		.command('interview')
 		.description('Create a configuration for cleaning your laptop')
 		.action(runCommand('interview', config));
 
@@ -27,7 +29,8 @@ try {
 } catch(error) {
 	if (error.stderr) log(error.stderr);
 	br();
-	log(`Error: ${error.message}`);
+	log(`Error: ${error}`);
+	log(error.stack);
 }
 
 function runCommand(name, config) {

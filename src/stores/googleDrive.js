@@ -1,3 +1,4 @@
+const Storage = require('../storage');
 const DriveProvider = require('./providers/driveProvider');
 
 class GoogleDrive extends Storage {
