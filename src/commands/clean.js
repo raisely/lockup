@@ -2,9 +2,13 @@ const { log, br, mapEachAction, modulesFromConfig } = require('../util/helpers')
 const { stopApps } = require('../util/apps');
 const { exec, resolvePaths } = require('../util/system');
 const flatten = require('lodash/flatten');
+
 /**
- *
- * @param {*} actions
+ * Clean Command
+ * @param {object} utils
+ * @param {Ora} utils.ora
+ * @param {Inquirer} utils.inquirer
+ * @param {Conf} utils.config
  */
 async function clean({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
@@ -19,7 +23,7 @@ ${notes}
 `;
 	});
 	log(`***************************
-	About to clean
+	Preparing to clean
 ***************************`, 'green');
 	log(beforeCleanNotes);
 
