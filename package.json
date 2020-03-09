@@ -1,12 +1,12 @@
 {
   "name": "lockup",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Raisely <engineering@raisely.com> (https://github.com/raisely)",
+  "author": "Chris Jensen <code@chrisjensen.info> (https://github.com/chrisjensen)",
   "license": "ISC",
   "dependencies": {
     "commander": "^4.1.1",
