@@ -4,6 +4,14 @@ const get = require('lodash/get');
 const stores = require('../stores')();
 const actions = require('../actions')();
 
+function header() {
+	log(`
+******************************
+	Raisely CLI (1.0.4)
+******************************
+`, 'magenta')
+}
+
 function log(message, color) {
 	console.log(chalk[color || 'white'](message))
 }
@@ -62,6 +70,7 @@ function modulesFromConfig(config) {
 
 module.exports = {
 	modulesFromConfig,
+	header,
 	log,
 	br,
 	error,

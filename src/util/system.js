@@ -32,7 +32,12 @@ function resolvePaths(paths) {
 	return resolvedPaths;
 }
 
+function deleteFile(path) {
+	// TODO remove the file
+}
+
 module.exports = {
+	deleteFile,
 	exec,
 	resolvePaths,
 };
