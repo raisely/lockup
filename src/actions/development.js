@@ -6,11 +6,9 @@ class Development extends Action {
 			toSave: [
 				':home/.ssh',
 				':home/Sites/*/.env*',
-				':home/Sites/*/.raisely.json',
-				':home/Sites/*/.raisely.json',
+				':home/Sites/*/*/.env*',
 				':home/Sites/raisely/relay/*.json',
-				':home/Sites/*/raisely.json',
-				':home/Sites/*/.raisely.json',
+				':home/Sites/*/config.js',
 			]
 		}
 	}
