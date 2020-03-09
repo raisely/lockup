@@ -1,5 +1,6 @@
 const allStorage = require('../stores')();
 const allActions = require('../actions')();
+const startCase = require('lodash/startCase');
 
 const { log, modulesFromConfig } = require('../util/helpers');
 
@@ -11,8 +12,9 @@ async function interview({ ora, inquirer, config }) {
 				name: 'actions',
 				message: 'Which applications do you wish to sanitise?',
 				choices: Object.keys(allActions).map(action => ({
-					name: action,
+					name: startCase(action),
 					value: action,
+					short: action,
 				})),
 				default: config.get('actions'),
 			}, {
