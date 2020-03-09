@@ -1,13 +1,27 @@
+const pkg = require('./package');
 const program = require('commander');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const Conf = require('conf');
-const { log, br } = require('./src/util/helpers');
+const { log, br, welcome } = require('./src/util/helpers');
+
 
 const commands = require('./src/commands')();
 
+welcome();
+
 try {
 	const config = new Conf();
+
+	program
+		.version(pkg.version)
+		.option('-v, --debug', 'output debugging info')
+		.option('-y, --yes', 'answer yes / default to all questions where possible (will fail on permission issues)');
+
+	program
+		.command('config')
+		.description('Configre what apps and files to clean')
+		.action(runCommand('interview', config));
 
 	program
 		.command('clean')
@@ -18,12 +32,6 @@ try {
 		.command('restore')
 		.description('Restore sensitive files to your laptop')
 		.action(runCommand('restore', config));
-
-	program
-		.command('interview')
-		.description('Create a configuration for cleaning your laptop')
-		.action(runCommand('interview', config));
-
 
 	program.parse(process.argv);
 } catch(error) {
