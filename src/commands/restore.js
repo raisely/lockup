@@ -59,7 +59,7 @@ ${notes}
 async function doRestore(filename, { ora, inquirer }) {
 	let spinner = ora(`Restoring files`).start();
 	try {
-		await exec(`sudo unzip -o ${filename} -d /`);
+		await exec(`unzip -o ${filename} -d /`);
 		spinner.succeed();
 	} catch (e) {
 		spinner.fail();
