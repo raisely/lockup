@@ -20,9 +20,13 @@ async function exec(cmd, options = {}) {
 		});
 
 		if (stdin) {
-			const lines = Array.isArray(stdin) ? stdin : [stdin];
-			lines.forEach(p => child.stdin.write(`${p}\n`));
-			child.stdin.end();
+			if (stdin.pipe) {
+				stdin.pipe(child.stdin);
+			} else {
+				const lines = Array.isArray(stdin) ? stdin : [stdin];
+				lines.forEach(p => child.stdin.write(`${p}\n`));
+				child.stdin.end();
+			}
 		}
 	});
 }
