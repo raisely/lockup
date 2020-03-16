@@ -8,10 +8,10 @@ const { log, br, welcome } = require('./src/util/helpers');
 
 const commands = require('./src/commands')();
 
-welcome();
+welcome(pkg);
 
 try {
-	const config = new Conf();
+	const config = new Conf({ cwd: process.cwd(), configName: 'lockup-config.json' });
 
 	program
 		.version(pkg.version)
