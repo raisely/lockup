@@ -41,7 +41,7 @@ async function mapEachAction(allActions, name, fn) {
 			finalResult = null;
 		}
 
-		result.push(finalResult)
+		results.push(finalResult)
 	}
 	return results;
 }
