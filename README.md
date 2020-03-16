@@ -25,6 +25,7 @@ Development | Secures .env files from development
 Instructions | Module for displaying custom instructions to display before or after clean/restore
 Mac Calander and Adddress | Secures calendar and address book
 Mac Keychain | Secures your user account keychains
+One Password | Switch one password to travel mode
 Postico | Postgres data admin tool
 Raisely Cli | Raisely CLI for local development
 Slack | Secures slack credentials and clears cache
@@ -56,7 +57,7 @@ install and execute.
 ### Configuration
 
 ```
-npx lockup config
+node index.js config
 ```
 
 This will ask you which apps you wish to secure and any special details about them
@@ -65,3 +66,16 @@ This will ask you which apps you wish to secure and any special details about th
 
 This will use the configuration to create the zip, and potentially purge cache files
 
+You can run a clean with
+
+```
+node index.js clean
+```
+
+### Restore
+
+Restore files. Run this after you've cleared airport security
+
+```
+node index.js restore
+```
