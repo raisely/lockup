@@ -29,15 +29,21 @@ function error(e, loader) {
 	}
 }
 
-function mapEachAction(allActions, name, fn) {
-	return allActions.map(action => {
-		const result = action[name] && action[name]();
+async function mapEachAction(allActions, name, fn) {
+	const results = [];
+	for (const index in allActions) {
+		const action = allActions[index];
+		const result = action[name] && await action[name]();
+		let finalResult = result;
 		if (result) {
-			return fn ? fn(action, result) : result;
+			finalResult = fn ? fn(action, result) : result;
+		} else {
+			finalResult = null;
 		}
 
-		return null;
-	});
+		result.push(finalResult)
+	}
+	return results;
 }
 
 function modulesFromConfig(config) {

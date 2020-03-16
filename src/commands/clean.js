@@ -13,11 +13,12 @@ const flatten = require('lodash/flatten');
 async function clean({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
-	const appsToStop = flatten(mapEachAction(actions, 'appsToStop')).filter(a => a);
+	const appList = await mapEachAction(actions, 'appsToStop');
+	const appsToStop = flatten(appList).filter(a => a);
 	let beforeCleanNotes = `
 The following apps will be stopped during cleaning ${appsToStop.join(', ')}`;
 
-	mapEachAction(actions, 'beforeCleanNotes', (action, notes) => {
+	await mapEachAction(actions, 'beforeCleanNotes', (action, notes) => {
 		beforeCleanNotes += `
 ${notes}
 `;
@@ -44,10 +45,11 @@ ${notes}
 
 	await stopApps(appsToStop, { ora, inquirer });
 
-	mapEachAction(actions, 'beforeClean').filter(a => a);
+	await mapEachAction(actions, 'beforeClean').filter(a => a);
 
 	const masterList = { toDelete: [], toSave: [] }
-	flatten(mapEachAction(actions, 'selectFiles')).filter(a => a).forEach(files => {
+	const selectedFiles = await mapEachAction(actions, 'selectFiles')
+	flatten(selectedFiles).filter(a => a).forEach(files => {
 		['toDelete', 'toSave'].forEach(type => {
 			if (files[type]) masterList[type] = masterList[type].concat(files[type]);
 		})
@@ -56,9 +58,9 @@ ${notes}
 	const file = await doClean(masterList, { ora, inquirer });
 	await storage.upload(file);
 
-	mapEachAction(actions, 'afterClean').filter(a => a);
+	await mapEachAction(actions, 'afterClean').filter(a => a);
 	let afterCleanNotes = '';
-	mapEachAction(actions, 'afterCleanNotes', (action, notes) => {
+	await mapEachAction(actions, 'afterCleanNotes', (action, notes) => {
 		afterCleanNotes += `
 ${notes}
 `;

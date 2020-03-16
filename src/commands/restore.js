@@ -9,11 +9,12 @@ const flatten = require('lodash/flatten');
 async function restore({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
-	const appsToStop = flatten(mapEachAction(actions, 'appsToStop')).filter(a => a);
+	const appList = await mapEachAction(actions, 'appsToStop');
+	const appsToStop = flatten(appList).filter(a => a);
 	let beforeRestoreNotes = `
 The following apps will be stopped before restoring: ${appsToStop.join(', ')}`;
 
-	mapEachAction(actions, 'beforeRestoreNotes', (action, notes) => {
+	await mapEachAction(actions, 'beforeRestoreNotes', (action, notes) => {
 		beforeRestoreNotes += `
 ${notes}
 `;
@@ -39,15 +40,15 @@ ${notes}
 
 	await stopApps(appsToStop, { ora, inquirer });
 
-	mapEachAction(actions, 'beforeRestore');
+	await mapEachAction(actions, 'beforeRestore');
 
 	// const filename = await storage.download();
 	const filename = './sensitive-files.zip';
 	await doRestore(filename, { ora, inquirer });
 
-	mapEachAction(actions, 'afterRestore');
+	await mapEachAction(actions, 'afterRestore');
 	let afterRestoreNotes = '';
-	mapEachAction(actions, 'afterRestoreNotes', (action, notes) => {
+	await mapEachAction(actions, 'afterRestoreNotes', (action, notes) => {
 		afterRestoreNotes += `
 ${notes}
 `;
