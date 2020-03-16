@@ -1,11 +1,10 @@
 const chalk = require('chalk');
 const get = require('lodash/get');
-const { version } = require('../package');
 
 const stores = require('../stores')();
 const actions = require('../actions')();
 
-function welcome() {
+function welcome({ version }) {
 	log(`
 ******************************
 	Lockup (${version})
