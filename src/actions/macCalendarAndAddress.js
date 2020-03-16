@@ -3,7 +3,7 @@ const { resolvePaths } = require('../util/system');
 const { testAndGuideRestrictedDir } = require('../helpers/file');
 
 class Keychain extends Action {
-	preClean(helpers) {
+	beforeClean(helpers) {
 		const paths = resolvePaths([':home/Library/Calendar', ':home/Library/Application Support/AddressBook/']);
 		testAndGuideRestrictedDir(paths[0], helpers);
 		testAndGuideRestrictedDir(paths[1], helpers);
