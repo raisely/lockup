@@ -1,4 +1,4 @@
-const { pick } = require('lodash/pick');
+const pick = require('lodash/pick');
 const Action = require('../action');
 const { exec } = require('../util/system');
 const { log } = require('../util/helpers');
