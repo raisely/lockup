@@ -11,7 +11,7 @@ const commands = require('./src/commands')();
 welcome(pkg);
 
 try {
-	const config = new Conf({ cwd: process.cwd(), configName: 'lockup-config.json' });
+	const config = new Conf({ cwd: process.cwd(), configName: 'lockup-config' });
 
 	program
 		.version(pkg.version)
