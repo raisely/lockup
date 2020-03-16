@@ -15,6 +15,10 @@ into a zip, and upload it to cloud storage.
 At the other end you can run `npx lockup restore` to download and restore
 all the files.
 
+Your configuration is saved in the current directory as `lockup-config.json`
+
+If you have colleagues with the same setup you can use this file as a template
+
 ### Supported Apps/Files
 | Module | Description |
 |-------|--------------|
