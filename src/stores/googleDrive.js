@@ -5,6 +5,9 @@ class GoogleDrive extends Storage {
 	async beforeClean() {
 
 	}
+	postCleanNotes() {
+		return '*** Saving to google drive not yet implmented. You must manually upload your file ****';
+	}
 	async upload(filename) {
 		// const [jwt, team] = await Promise.all([
 		// 	authorize(),
