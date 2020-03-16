@@ -38,7 +38,7 @@ async function interview({ ora, inquirer, config }) {
 	for (const index in storage) {
 		const store = storage[index];
 		await interviewClass({ ora, inquirer, config }, store.constructor.name, 'storage', store);
-	};
+	}
 
 	// Configure actions
 	for (const index in actions) {
