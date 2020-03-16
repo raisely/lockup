@@ -55,13 +55,12 @@ cleaned apps as they may not be stable or function properly.
 
 ### Installing
 
-Lockup is built and tested on node 8. You can run it using `npx` to 
-install and execute.
+Lockup is built and tested on node 8. Simply clone the repo and run `node lockup` to run it
 
 ### Configuration
 
 ```
-node index.js config
+node lockup config
 ```
 
 This will ask you which apps you wish to secure and any special details about them
@@ -73,7 +72,7 @@ This will use the configuration to create the zip, and potentially purge cache f
 You can run a clean with
 
 ```
-node index.js clean
+node lockup clean
 ```
 
 ### Restore
@@ -81,5 +80,5 @@ node index.js clean
 Restore files. Run this after you've cleared airport security
 
 ```
-node index.js restore
+node lockup restore
 ```
