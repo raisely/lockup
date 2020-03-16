@@ -26,7 +26,7 @@ class Action {
 		return {};
 	}
 	configure(config) {
-		this.conig = config;
+		this.config = config;
 	}
 	/**
 	 * Return a list of apps to stop before cleaning / restoring
