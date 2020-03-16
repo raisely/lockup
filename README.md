@@ -1,4 +1,4 @@
-## Lock Up 🔐
+## Lock Up 🔐✈️🔓
 
 Easily remove and restore sensitive files from your Mac.
 
@@ -16,19 +16,19 @@ At the other end you can run `npx lockup restore` to download and restore
 all the files.
 
 ### Supported Apps/Files
-Module | Description
--------+--------------
-Authy  | Secures Authy database
-Browsers | Secures localStorage & cookies from Firefox, & Chrome
-Cloud Development | Secures credentials from Google Cloud and AWS
-Development | Secures .env files from development
-Instructions | Module for displaying custom instructions to display before or after clean/restore
-Mac Calander and Adddress | Secures calendar and address book
-Mac Keychain | Secures your user account keychains
-One Password | Switch one password to travel mode
-Postico | Postgres data admin tool
-Raisely Cli | Raisely CLI for local development
-Slack | Secures slack credentials and clears cache
+| Module | Description |
+|-------|--------------|
+| Authy  | Secures Authy database |
+| Browsers | Secures localStorage & cookies from Firefox, & Chrome |
+| Cloud Development | Secures credentials from Google Cloud and AWS |
+| Development | Secures .env files from development |
+| Instructions | Module for displaying custom instructions to display before or after clean/restore |
+| Mac Calander and Adddress | Secures calendar and address book |
+| Mac Keychain | Secures your user account keychains |
+| One Password | Switch one password to travel mode |
+| Postico | Postgres data admin tool |
+| Raisely Cli | Raisely CLI for local development |
+| Slack | Secures slack credentials and clears cache |
 
 ### A note on built-in apps & files
 Many built in files apps on Mac now have restricted access. In order for lockup to
