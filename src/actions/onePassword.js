@@ -1,4 +1,4 @@
-const pick = require('lodash/pick');
+const _ = require('lodash');
 const Action = require('../action');
 const { exec } = require('../util/system');
 const { log } = require('../util/helpers');
@@ -30,7 +30,7 @@ class OnePassword extends Action {
 						message: 'Do you wish to setup another One Password account?',
 					}
 				]);
-			accounts.push(pick(answer, ['domain', 'email']));
+			accounts.push(_.pick(answer, ['domain', 'email']));
 		} while (answer.another);
 		return { accounts };
 	}
