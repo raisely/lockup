@@ -1,13 +1,14 @@
 const chalk = require('chalk');
 const get = require('lodash/get');
+const { version } = require('../package');
 
 const stores = require('../stores')();
 const actions = require('../actions')();
 
-function header() {
+function welcome() {
 	log(`
 ******************************
-	Raisely CLI (1.0.4)
+	Lockup (${version})
 ******************************
 `, 'magenta')
 }
@@ -76,7 +77,7 @@ function modulesFromConfig(config) {
 
 module.exports = {
 	modulesFromConfig,
-	header,
+	welcome,
 	log,
 	br,
 	error,

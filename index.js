@@ -8,7 +8,7 @@ const { log, br, welcome } = require('./src/util/helpers');
 
 const commands = require('./src/commands')();
 
-// welcome();
+welcome();
 
 try {
 	const config = new Conf();
