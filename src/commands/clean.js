@@ -15,7 +15,9 @@ async function clean({ ora, inquirer, config }) {
 
 	const appList = await mapEachAction(actions, 'appsToStop');
 	const appsToStop = flatten(appList).filter(a => a);
-	let beforeCleanNotes = `
+	let beforeCleanNotes = '';
+
+	if (appsToStop.length) beforeCleanNotes += `
 The following apps will be stopped during cleaning ${appsToStop.join(', ')}`;
 
 	await mapEachAction(actions, 'beforeCleanNotes', (action, notes) => {

@@ -11,7 +11,8 @@ async function restore({ ora, inquirer, config }) {
 
 	const appList = await mapEachAction(actions, 'appsToStop');
 	const appsToStop = flatten(appList).filter(a => a);
-	let beforeRestoreNotes = `
+	let beforeRestoreNotes = '';
+	if (appsToStop) beforeRestoreNotes += `
 The following apps will be stopped before restoring: ${appsToStop.join(', ')}`;
 
 	await mapEachAction(actions, 'beforeRestoreNotes', (action, notes) => {
