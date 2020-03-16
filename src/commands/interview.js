@@ -35,14 +35,16 @@ async function interview({ ora, inquirer, config }) {
 	const { actions, storage } = modulesFromConfig(config);
 
 	// Configure storage
-	for (const store in storage) {
-		await interviewClass({ ora, inquirer, config }, store, 'storage', storage[store]);
+	for (const index in storage) {
+		const store = storage[index];
+		await interviewClass({ ora, inquirer, config }, store.constructor.name, 'storage', store);
 	};
 
 	// Configure actions
-	for (const action in actions) {
-		await interviewClass({ ora, inquirer, config }, action, 'action', actions[action]);
-	};
+	for (const index in actions) {
+		const action = actions[index];
+		await interviewClass({ ora, inquirer, config }, action.constructor.name, 'action', action);
+	}
 
 	log('Your configuration has been saved to');
 	console.log(config.path);
