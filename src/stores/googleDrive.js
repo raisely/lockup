@@ -24,7 +24,7 @@ class GoogleDrive extends Storage {
 		};
 
 		const res = await uploadFile(jwt, metadata, media);
-
+		deleteFile(filename);
 	}
 	async download() {
 
