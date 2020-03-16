@@ -15,7 +15,7 @@
     "glob-promise": "^3.4.0",
     "googleapis": "^47.0.0",
     "inquirer": "^7.0.6",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "ora": "^4.0.3",
     "shelljs": "^0.8.3"
   }
