@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const Action = require('../action');
 
 const methods = ['beforeClean', 'afterClean', 'beforeRestore', 'afterRestore'];
@@ -8,7 +9,7 @@ class Instructions extends Action {
 		methods
 			.map(m => `${m}Notes`)
 			.forEach(method => {
-				this.method = () => this.config[method];
+				this[method] = () => this.config[method];
 			});
 	}
 
@@ -17,8 +18,8 @@ class Instructions extends Action {
 		const config = await inquirer
 			.prompt(methods.map(name => ({
 					type: 'editor',
-					name,
-					message: `Instructions to display ${startCase(name).toLowerCase()}`,
+					name: `${name}Notes`,
+					message: `Instructions to display ${_.startCase(name).toLowerCase()}`,
 				})));
 		return config;
 	}
