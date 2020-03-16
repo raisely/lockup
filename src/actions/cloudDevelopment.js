@@ -6,9 +6,13 @@ class CloudDevelopment extends Action {
 			toSave: [
 				// Amazon
 				':home/.aws',
-				// Google cloud credentials
+				// Google & Stripe cloud credentials
 				':home/.config',
-			]
+			],
+			toDelete: [
+				// Delete log files
+				':home/.config/gcloud/logs',
+			],
 		}
 	}
 }
